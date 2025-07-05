@@ -1,0 +1,65 @@
+classDiagram
+    %% Varlık Hiyerarşisi
+    Entity <|-- Player : is
+    Entity <|-- Monster : is
+    Entity <|-- OBJ_Hearth : is
+    
+    Monster <|-- Zombie : is
+    Zombie <|-- NormalZombie : is
+    Zombie <|-- ReptileZombie : is
+    Zombie <|-- TankZombie : is
+    Zombie <|-- AcidZombie : is
+    
+    ReptileZombie --|> Jumpable : uses
+    AcidZombie --|> Acidity : uses
+
+    Player "has 5" *-- Weapon : silah envanteri
+    AcidZombie "has" *-- Acid : üretir
+
+    %% Silah/Mermi Sistemi
+    Weapon <|-- Pistol : is
+    Weapon <|-- Rifle : is
+    Weapon <|-- Shotgun : is
+    Weapon <|-- Sniper : is
+    Weapon <|-- RocketLauncher : is
+    
+    Ammo <|-- PistolAmmo : is
+    Ammo <|-- RifleAmmo : is
+    Ammo <|-- ShotgunAmmo : is
+    Ammo <|-- SniperAmmo : is
+    Ammo <|-- RocketAmmo : is
+    Ammo <|-- Acid : is
+
+    Pistol --* PistolAmmo : uses
+    RocketLauncher --* RocketAmmo : uses
+    AcidZombie --* Acid : uses
+
+    %% Oyun Yapısı
+    Game "has 1" *-- GamePanel : contains
+    GamePanel "has 1" *-- KeyHandler : contains
+    GamePanel "has 1" *-- Player : contains
+    GamePanel "has *" *-- Monster : contains
+    GamePanel "has *" *-- Ammo : contains
+    
+    GamePanel "uses" --> CollisionChecker : manages
+    GamePanel "uses" --> AnimationManager : controls
+
+    %% Animasyon Sistemi
+    AnimationManager "has *" *-- Animation : manages
+    Animation <|-- ExplosionAnimation : is
+    Animation <|-- AcidSplashAnimation : is
+    
+    RocketAmmo --> AnimationManager : uses
+    AcidZombie --> AnimationManager : uses
+
+    %% Yardımcı Sınıflar
+    TileManager "has *" *-- Tile : contains
+    TileManager --> UtilityTool : uses
+    UI --> OBJ_Hearth : uses
+
+    class Entity { abstract }
+    class Weapon { abstract }
+    class Ammo { abstract }
+    class Jumpable { <<interface>> }
+    class Acidity { <<interface>> }
+    class UtilityTool { static helpers }
